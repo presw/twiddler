@@ -48,6 +48,7 @@ var generateRandomTweet = function(){
 
 for(var i = 0; i < 10; i++){
   generateRandomTweet();
+  console.log("Tweet: " + i);
 }
 
 var scheduleNextTweet = function(){
