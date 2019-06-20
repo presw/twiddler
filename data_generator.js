@@ -48,12 +48,12 @@ var generateRandomTweet = function(){
 
 for(var i = 0; i < 10; i++){
   generateRandomTweet();
-  console.log("Tweet: " + i);
 }
 
 var scheduleNextTweet = function(){
   generateRandomTweet();
   setTimeout(scheduleNextTweet, Math.random() * 1500);
+  console.log("Here is a scheduled tweet!");
 };
 scheduleNextTweet();
 
