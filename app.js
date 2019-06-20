@@ -1,5 +1,13 @@
 // Utility functions
 
+
+let tweetBoxMaker = () => {
+  let count = 0;
+  return function() {
+
+  }
+}
+
 $(document).ready(function(){
   var $body = $('container');
   $body.html('');
@@ -19,8 +27,17 @@ let newTweets = () => {
     while(currentLocation <= homeLength){
       var tweet = streams.home[currentLocation];
       var $tweet = $('<div class="tweets"></div>');
-      $tweet.text('@' + tweet.user + ': ' + tweet.message + ' ' + tweet.created_at);
+
+      var $twitterHandle = $('<div class="twitterHandle"></div>');
+
+
+      // $tweet.html('@' + tweet.user + '<br>' + tweet.message + '<br>' + tweet.created_at);
+      $tweet.html(tweet.message);
+      $twitterHandle.html(tweet.user);
       $(".container").prepend($tweet);
+
+      $(".tweets").prepend($twitterHandle);
+
       currentLocation += 1;
     }
   }
