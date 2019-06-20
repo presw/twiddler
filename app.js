@@ -4,45 +4,29 @@ $(document).ready(function(){
   var $body = $('container');
   $body.html('');
 
-// storedIndex - where we started last time
 let newTweets = () => {
   let storedIndex;
-  console.log("Creating our tweet function");
   return function() {
-    console.log("inside the return function");
-    let lastPosition;
+    let currentLocation;
     if (storedIndex === undefined) {
-      lastPosition = -1;
+      currentLocation = 0;
     } else {
-      lastPosition = storedIndex;
+      currentLocation = storedIndex;
     }
-    var index = streams.home.length - 1;
-    storedIndex = index;
-    console.log("Index: " + index + " StoredIndex: " + storedIndex);
-    while(index > lastPosition){
-      var tweet = streams.home[index];
+    var homeLength = streams.home.length - 1;
+    storedIndex = homeLength;
+    console.log("Index: " + homeLength + " StoredIndex: " + storedIndex);
+    while(currentLocation <= homeLength){
+      var tweet = streams.home[currentLocation];
       var $tweet = $('<div class="tweets"></div>');
       $tweet.text('@' + tweet.user + ': ' + tweet.message + ' ' + tweet.created_at);
-      $(".container").append($tweet);
-      $tweet.appendTo($body);
-      index -= 1;
+      $(".container").prepend($tweet);
+      currentLocation += 1;
     }
   }
 }
 
 let refreshTweets = newTweets();
-
-// let refreshTweets = () => {
-//   storedIndex = index;
-//   while(index > storedIndex){
-//     var tweet = streams.home[index];
-//     var $tweet = $('<div></div>');
-//     $tweet.text('@' + tweet.user + ': ' + tweet.message + ' ' + tweet.created_at);
-//     $(".container").append($tweet);
-//     $tweet.appendTo($body);
-//     index -= 1;
-//   }
-// }
 
 refreshTweets();
 
