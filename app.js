@@ -33,20 +33,15 @@ let newTweets = () => {
     while(currentLocation <= homeLength){
       var tweet = streams.home[currentLocation];
       var tweetId = makeTweetBox();
-
       var $twitterHandle = $('<div class="twitterHandle"></div>');
       var $message = $('<div class="message"></div>');
-
-
-      // $tweet.html('@' + tweet.user + '<br>' + tweet.message + '<br>' + tweet.created_at);
-      // $tweet.html(tweet.message);
-      $twitterHandle.html(tweet.user);
+      var $timeStamp = $('<div class="time-stamp"></div>')
+      $twitterHandle.html('@' + tweet.user);
       $message.html(tweet.message);
-
+      $timeStamp.html(tweet.created_at);
       $(tweetId).prepend($twitterHandle);
       $(tweetId).append($message);
-      //tweetId).prepend(message);
-      //tweetId).prepend(time);
+      $(tweetId).append($timeStamp);
 
       console.log(tweetId + "'@' " + tweet.user + " " + tweet.message + " " + tweet.created_at);
 
@@ -59,8 +54,8 @@ let refreshTweets = newTweets();
 
 refreshTweets();
 
-$('#refreshTweets').click(function() {
-  refreshTweets();
+$('#refreshTweets').on('click', function() {
+  $(refreshTweets()).slideDown("slow", function() {});
 });
 
 });
