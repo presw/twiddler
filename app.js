@@ -1,6 +1,8 @@
 // Utility functions
 
+let userClicked = false;
 
+// Generates tweet div class into container div with unique ID
 let tweetBoxMaker = () => {
   let count = 0;
   return function() {
@@ -12,24 +14,24 @@ let tweetBoxMaker = () => {
   }
 }
 
+// Makes the tweet box
 let makeTweetBox = tweetBoxMaker();
 
-$(document).ready(function(){
-  var $body = $('container');
-  $body.html('');
 
+// Clears out and refreshes view with all tweets
+// from all users or user indicated
 let newTweets = () => {
   let storedIndex;
+  let storedHandle;
   return function(userHandle) {
     let currentLocation;
-    if (storedIndex === undefined) {
+    if (storedIndex === undefined || storedHandle !== userHandle || userClicked) {
       currentLocation = 0;
+      storedHandle = userHandle;
     } else {
       currentLocation = storedIndex;
     }
 
-    //have a directory variable (which is something like streams.home or streams.user.tweets)
-    //homeLength needs to be set here as well
     let directory;
     if (userHandle === undefined) {
       directory = streams.home;
@@ -39,49 +41,70 @@ let newTweets = () => {
 
     let homeLength = directory.length - 1;
     storedIndex = homeLength;
-    console.log("Index: " + homeLength + " StoredIndex: " + storedIndex);
+    // Generates div class twitterHandle, message, timeStamp into tweedId
     while(currentLocation <= homeLength){
       var tweet = directory[currentLocation];
       var tweetId = makeTweetBox();
       var $twitterHandle = $('<div class="twitterHandle"></div>');
       var $message = $('<div class="message"></div>');
       var $timeStamp = $('<div class="time-stamp"></div>')
-      var $twitterHandleLink = $('<a></a>');
-      $twitterHandleLink.html('@' + tweet.user);
+      $twitterHandle.html('@' + tweet.user);
       $message.html(tweet.message);
       $timeStamp.html(tweet.created_at);
+
+      // Populates the tweet box
       $(tweetId).prepend($twitterHandle);
-      $($twitterHandle).append($twitterHandleLink);
       $(tweetId).append($message);
       $(tweetId).append($timeStamp);
-
-      console.log(tweetId + "'@' " + tweet.user + " " + tweet.message + " " + tweet.created_at);
 
       currentLocation += 1;
     }
   }
 }
 
+// Refreshes page with all tweets
 let refreshTweets = newTweets();
 
+// Refreshes with all tweets from individual user
 let showUserTweets = newTweets();
 
-refreshTweets();
+let obtainUserTweets = () => {
+    // originally used to store userClicked scope
+  return function(thisUser) {
+    if (!userClicked) {
+      $('.container').empty();
+      userClicked = true;
+    }
+    showUserTweets(thisUser);
+  }
+}
 
-$('#refreshTweets').on('click', function() {
-  $(refreshTweets()).slideDown("slow", function() {});
-});
+// Acts as a checker to see if we've clicked present tweeter
+let filterUserTweets = obtainUserTweets();
 
-$('.container').on('click', 'a', function(event) {
-  $('.container').empty();
-  let thisUser = this.text
-  thisUser = thisUser.split('');
-  thisUser.shift();
-  thisUser = thisUser.join('');
-  showUserTweets(thisUser);
-  console.log(event);
-});
-// we want an on click action for twitterHandle
-  // open a new page?
+// Things happening in the website:
+$(document).ready(function(){
+  var $body = $('container');
+  $body.html('');
 
+  // Populate tweets
+  refreshTweets();
+
+  // Click for more tweets button
+  $('#refreshTweets').on('click', function() {
+    if (userClicked === true) {
+      $(".container").empty();
+    }
+    $(refreshTweets());
+    userClicked = false;
+  });
+
+  // Click user handle to view tweets from that user
+  $('.container').on('click', 'div.twitterHandle', function(event) {
+    let thisUser = event.currentTarget.innerText;
+    thisUser = thisUser.split('');
+    thisUser.shift();
+    thisUser = thisUser.join('');
+    filterUserTweets(thisUser);
+  });
 });
