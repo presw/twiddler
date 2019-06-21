@@ -74,7 +74,11 @@ $('#refreshTweets').on('click', function() {
 
 $('.container').on('click', 'a', function(event) {
   $('.container').empty();
-  showUserTweets('shawndrost');
+  let thisUser = this.text
+  thisUser = thisUser.split('');
+  thisUser.shift();
+  thisUser = thisUser.join('');
+  showUserTweets(thisUser);
   console.log(event);
 });
 // we want an on click action for twitterHandle
